@@ -5,14 +5,17 @@ const notFound = (req, res, next) => {
 }
 
 const errorHandler = (err, req, res, next) => {
-  // Sometimes the error code is 200, but we want it to be 500
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  res.status(statusCode);
-  res.json({
-    // We want to show the stack trace only in development mode
+  let message = err.message;
+  if (err.name === 'CastError' && err.kind === 'ObjectId') {
+    statusCode = 400; 
+    message = 'Resource not found';
+  }
+
+  res.status(statusCode).json({
     message: err.message,
     stack: process.env.NODE_ENV === 'production' ? null : err.stack,
   });
 }
 
-export { notFound, errorHandler };
+export { notFound, errorHandler};
