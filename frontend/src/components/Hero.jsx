@@ -1,4 +1,5 @@
 import { Container, Card, Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 
 const Hero = () => {
 	return (
@@ -8,8 +9,12 @@ const Hero = () => {
 					<h1 className='textcenter mb-4'>Todo Authentication</h1>
 					<p className='text-center mb-4'>boilerplate auth stores jwt in http-only cookie. uses redux toolk and react bootstrap library</p>
 					<div className='d-flex'>
-						<Button variant='primary' href='/login' className='me-3'> Sign In</Button>
-						<Button variant='secondary' href='/register' className='me-3'>Sign Up</Button>
+					<LinkContainer to={'/login'}>
+						<Button variant='primary' className='me-3'> Sign In</Button>
+					</LinkContainer>
+					<LinkContainer to={'/register'}>
+						<Button variant='secondary' className='me-3'> Sign Up </Button>
+					</LinkContainer>
 					</div>
 				</Card>
 			</Container>
