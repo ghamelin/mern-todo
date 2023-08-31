@@ -11,7 +11,9 @@ const RegisterScreen = () => {
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
-		console.log('submit');
+		console.log('submit', {
+			name, email, password, confirmPassword	
+		});
 	};
 	return (
 		<FormContainer>
@@ -66,7 +68,7 @@ const RegisterScreen = () => {
         </Button>
         <Row className="py-3">
           <Col>
-            Already have an Account? <Link to="/register">Register</Link>
+            Already have an account? <Link to="/register">Sign In</Link>
           </Col>
         </Row>
 			</Form>
