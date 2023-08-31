@@ -6,7 +6,7 @@ import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 import userRoutes from './routes/userRoutes.js';
 
 connectDB();
