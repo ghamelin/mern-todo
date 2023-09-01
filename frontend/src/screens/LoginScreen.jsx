@@ -5,6 +5,8 @@ import FormContainer from '../components/FormContainer.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLoginMutation } from '../slices/usersApiSlice.js';
 import { setCredentials } from '../slices/authSlice.js';
+import { toast } from 'react-toastify';
+import Loader from '../components/Loader.jsx';
 
 const LoginScreen = () => {
 	const [email, setEmail] = useState('');
@@ -27,10 +29,11 @@ const LoginScreen = () => {
 		e.preventDefault();
 		try {
 			const res = await login({ email, password }).unwrap();
-			dispatch(setCredentials(...res));
+
+			dispatch(setCredentials({...res}));
 			navigate('/');
 		} catch (err) {
-			console.log(err?.data?.message || err.error.message);
+			toast.error(err?.data?.message || err.error.message);
 			
 		}
 	};
@@ -61,7 +64,7 @@ const LoginScreen = () => {
 								setPassword(e.target.value)
 							}></Form.Control>
 					</Form.Group>
-
+							{isLoading && <Loader /> }
 					<Button type='submit' variant='primary' className='mt-3'>
 						Sign In
 					</Button>
