@@ -8,9 +8,7 @@ import { useLogoutMutation } from '../slices/usersApiSlice.js';
 import { toast } from 'react-toastify';
 
 const Header = () => {
-
-	const userInfo = useSelector((state) => state.auth);
-
+	const { userInfo } = useSelector((state) => state.auth);
 
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -35,8 +33,37 @@ const Header = () => {
 					</LinkContainer>
 					<Navbar.Toggle aria-controls='basic-navbar-nav' />
 					<Navbar.Collapse id='basic-navbar-nav'>
-					<Nav className='ms-auto'>
-              {userInfo ? (<><NavDropdown title={userInfo.name} id='username'><LinkContainer to='/profile'><NavDropdown.Item>Profile</NavDropdown.Item></LinkContainer><NavDropdown.Item onClick={logoutHandler}>Logout</NavDropdown.Item></NavDropdown></>) : (<><LinkContainer to='/login'><Nav.Link><FaSignInAlt /> Sign In</Nav.Link></LinkContainer><LinkContainer to='/register'><Nav.Link><FaSignOutAlt /> Sign Up</Nav.Link></LinkContainer></>)}
+						<Nav className='ms-auto'>
+							{ userInfo ? (
+								<>
+									<NavDropdown
+										title={userInfo.name}
+										id='username'>
+										<LinkContainer to='/profile'>
+											<NavDropdown.Item>
+												Profile
+											</NavDropdown.Item>
+										</LinkContainer>
+										<NavDropdown.Item
+											onClick={logoutHandler}>
+											Logout
+										</NavDropdown.Item>
+									</NavDropdown>
+								</>
+							) : (
+								<>
+									<LinkContainer to='/login'>
+										<Nav.Link>
+											<FaSignInAlt /> Sign In
+										</Nav.Link>
+									</LinkContainer>
+									<LinkContainer to='/register'>
+										<Nav.Link>
+											<FaSignOutAlt /> Sign Up
+										</Nav.Link>
+									</LinkContainer>
+								</>
+							)}
 						</Nav>
 					</Navbar.Collapse>
 				</Container>
