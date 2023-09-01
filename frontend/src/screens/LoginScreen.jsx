@@ -1,15 +1,38 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer.jsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { useLoginMutation } from '../slices/usersApiSlice.js';
+import { setCredentials } from '../slices/authSlice.js';
 
 const LoginScreen = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	const [login, { isLoading }] = useLoginMutation();
+
+	const { userInfo } = useSelector((state) => state.auth);
+
+	useEffect(() => {
+		if (userInfo) {
+			navigate('/');
+		}
+	}, [userInfo, navigate]);
+
 	const submitHandler = async (e) => {
 		e.preventDefault();
-		console.log('submit');
+		try {
+			const res = await login({ email, password }).unwrap();
+			dispatch(setCredentials(...res));
+			navigate('/');
+		} catch (err) {
+			console.log(err?.data?.message || err.error.message);
+			
+		}
 	};
 	return (
 		<>
@@ -23,8 +46,9 @@ const LoginScreen = () => {
 							type='email'
 							placeholder='Enter email'
 							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-              ></Form.Control>
+							onChange={(e) =>
+								setEmail(e.target.value)
+							}></Form.Control>
 					</Form.Group>
 
 					<Form.Group className='my-2' controlId='password'>
@@ -33,19 +57,21 @@ const LoginScreen = () => {
 							type='password'
 							placeholder='Enter Password'
 							value={password}
-							onChange={(e) =>setPassword(e.target.value)}
-              ></Form.Control>
+							onChange={(e) =>
+								setPassword(e.target.value)
+							}></Form.Control>
 					</Form.Group>
 
 					<Button type='submit' variant='primary' className='mt-3'>
 						Sign In
 					</Button>
 				</Form>
-					<Row className='py-3'>
-						<Col>
-							New Customer? <Link to='/register'> Register </Link>
-						</Col>
-					</Row>
+				<Row className='py-3'>
+					<Col>
+						New Customer? <Link to='/register'> Register </Link>
+					</Col>
+				</Row>
+				
 			</FormContainer>
 		</>
 	);
