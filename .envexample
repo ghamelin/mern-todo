@@ -1,0 +1,5 @@
+NODE_ENV=development
+PORT=4000
+MONGODB_URI=some-mongodb-uri
+JWT_SECRET=some-jwt-secret
+
