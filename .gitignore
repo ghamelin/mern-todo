@@ -16,3 +16,8 @@ npm-debug.log*
 *.css.map
 *.sass.map
 *.scss.map
+
+
+#Secrets
+.secrets
+
