@@ -6,8 +6,8 @@ const Hero = () => {
 		<div className='py-5'>
 			<Container className='d-flex justify-content-center'>
 				<Card className='p-5 d-flex flex-column align-items-center hero-card bg-light w-75'>
-					<h1 className='textcenter mb-4'>Todo Authentication</h1>
-					<p className='text-center mb-4'>boilerplate auth stores jwt in http-only cookie. uses redux toolk and react bootstrap library</p>
+					<h1 className='textcenter mb-4'>Todo Application</h1>
+					<p className='text-center mb-4'>Basic Todo application with user authentication, multiple list creation, and various states for list items. </p>
 					<div className='d-flex'>
 					<LinkContainer to={'/login'}>
 						<Button variant='primary' className='me-3'> Sign In</Button>
