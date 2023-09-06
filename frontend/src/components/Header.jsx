@@ -10,6 +10,10 @@ import { toast } from 'react-toastify';
 const Header = () => {
 	const { userInfo } = useSelector((state) => state.auth);
 
+	if (userInfo){
+		const name = `${userInfo.name.firstName} ${userInfo.name.lastName}` || null;
+	}
+
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 
@@ -37,7 +41,7 @@ const Header = () => {
 							{ userInfo ? (
 								<>
 									<NavDropdown
-										title={userInfo.name}
+										title={name}
 										id='username'>
 										<LinkContainer to='/profile'>
 											<NavDropdown.Item>

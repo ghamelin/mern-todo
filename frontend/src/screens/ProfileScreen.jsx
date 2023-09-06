@@ -6,13 +6,14 @@ import { setCredentials } from '../slices/authSlice.js';
 import { toast } from 'react-toastify';
 import { useUpdateUserMutation } from '../slices/usersApiSlice.js';
 import Loader from '../components/Loader.jsx';
+import Cookies from 'universal-cookie';
 
 const ProfileScreen = () => {
-	const [name, setName] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
 
+const cookie = new Cookies();
 
 	const dispatch = useDispatch();
 
@@ -21,24 +22,25 @@ const ProfileScreen = () => {
 	const [updateUser, { isLoading }] = useUpdateUserMutation();
 
 	useEffect(() => {
-		setName(userInfo.name);
+		setFirstName(userInfo.name.firstName);
+		setLastName(userInfo.name.lastName);
 		setEmail(userInfo.email);
-	}, [userInfo.setName, userInfo.setEmail]);
+	}, [userInfo.setFirstName, userInfo.setEmail, userInfo.setLastName, userInfo.name.firstName, userInfo.name.lastName, userInfo.email]);
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
-		if (password !== confirmPassword) {
-			toast.error('Passwords do not match');
-			return;
+		if (!firstName || !lastName || !email) {
+			toast.error('All fields are required');
 		} else {
 			try {
         const res = await updateUser({ 
           _id: userInfo._id,
-          name,
+          firstName,
+					lastName,
           email,
-          password 
+					sessiontoken: cookie.get('sessionToken').session_token,
         }).unwrap();
-        dispatch(setCredentials({...res}));
+				console.log(res);
         toast.success('User profile updated');
       } catch (err) {
         toast.error(err?.data?.message || err.error);
@@ -50,13 +52,23 @@ const ProfileScreen = () => {
 			<h1>Update Profile</h1>
 			<Form onSubmit={submitHandler}>
 				<Form.Group className='my-2' controlId='Name'>
-					<Form.Label>Name</Form.Label>
+					<Form.Label>First Name</Form.Label>
 					<Form.Control
 						type='text'
-						placeholder='Enter Name'
-						value={name}
+						placeholder='Enter First Name'
+						value={firstName}
 						onChange={(e) =>
-							setName(e.target.value)
+							setFirstName(e.target.value)
+						}></Form.Control>
+				</Form.Group>
+				<Form.Group className='my-2' controlId='Name'>
+					<Form.Label>Last Name</Form.Label>
+					<Form.Control
+						type='text'
+						placeholder='Enter Last Name'
+						value={lastName}
+						onChange={(e) =>
+							setLastName(e.target.value)
 						}></Form.Control>
 				</Form.Group>
 
@@ -68,28 +80,6 @@ const ProfileScreen = () => {
 						value={email}
 						onChange={(e) =>
 							setEmail(e.target.value)
-						}></Form.Control>
-				</Form.Group>
-
-				<Form.Group className='my-2' controlId='password'>
-					<Form.Label>Password</Form.Label>
-					<Form.Control
-						type='password'
-						placeholder='Enter Password'
-						value={password}
-						onChange={(e) =>
-							setPassword(e.target.value)
-						}></Form.Control>
-				</Form.Group>
-
-				<Form.Group className='my-2' controlId='confirmPassword'>
-					<Form.Label>Confirm Password</Form.Label>
-					<Form.Control
-						type='password'
-						placeholder='Confirm Password'
-						value={confirmPassword}
-						onChange={(e) =>
-							setConfirmPassword(e.target.value)
 						}></Form.Control>
 				</Form.Group>
 

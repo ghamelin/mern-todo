@@ -5,6 +5,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import cors from 'cors';
 
 
 const port = process.env.PORT || 4000;
@@ -12,7 +13,7 @@ import userRoutes from './routes/userRoutes.js';
 
 connectDB();
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => { res.send('Server is ready'); });
 }
 
-app.use(notFound);
-app.use(errorHandler);
+// app.use(notFound);
+// app.use(errorHandler);
 
 app.listen(port, () => { console.log(`Server started at http://localhost:${port}`); });

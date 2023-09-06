@@ -1,27 +1,22 @@
-import jwt from "jsonwebtoken";
+import cookieParser, { JSONCookie } from "cookie-parser";
 import AsyncHandler from "express-async-handler";
-import User from "../models/userModel.js";
+import * as stytch from 'stytch';
+
 
 const protect = AsyncHandler(async (req, res, next) => {
-  let token;
-  
-  token = req.cookies.jwt;
+  const sessionToken = JSONCookie(req.cookies.sessionToken).session_token;
 
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  console.log(sessionToken);
+  client.sessions.authenticate({session_token: sessionToken}).then((response) => {
+    req.user = response;
+    next();
+  }).catch((error) => {
+  console.log(error);
+  });
 
-      req.user = await User.findById(decoded.userId).select("-password");
-
-      next();
-    } catch (error) {
-      res.status(401);
-      throw new Error("Not authorized, invalid token");
-    }
-  } else {
-      res.status(401);
-      throw new Error("Not authorized, no token");
-  }
 });
 
 export { protect };
+
+
+// update to validate with stytch
