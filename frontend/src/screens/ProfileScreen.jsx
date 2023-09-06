@@ -37,8 +37,7 @@ const cookie = new Cookies();
           _id: userInfo._id,
           firstName,
 					lastName,
-          email,
-					sessiontoken: cookie.get('sessionToken').session_token,
+          email
         }).unwrap();
 				console.log(res);
         toast.success('User profile updated');
