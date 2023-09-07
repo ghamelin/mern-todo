@@ -1,5 +1,4 @@
 import { apiSlice } from './apiSlice';
-import Cookies from 'universal-cookie';
 const USERS_URL = 'api/users';
 
 export const usersApiSlice = apiSlice.injectEndpoints({
@@ -29,9 +28,12 @@ export const usersApiSlice = apiSlice.injectEndpoints({
 				url: `${USERS_URL}/profile`,
 				method: 'PUT',
 				body: credentials,
-				header:credentials.headers = {
-					sessiontoken: new Cookies().get('sessionToken').session_token,
-				},
+			}),
+		}),
+		getUser: builder.mutation({
+			query: () => ({
+				method: 'GET',
+				url: `${USERS_URL}/profile`,
 			}),
 		}),
 	}),
@@ -42,4 +44,5 @@ export const {
 	useLogoutMutation,
 	useRegisterMutation,
 	useUpdateUserMutation,
+	useGetUserMutation,
 } = usersApiSlice;

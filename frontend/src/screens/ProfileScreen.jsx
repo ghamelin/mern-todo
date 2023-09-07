@@ -4,22 +4,19 @@ import FormContainer from '../components/FormContainer.jsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCredentials } from '../slices/authSlice.js';
 import { toast } from 'react-toastify';
-import { useUpdateUserMutation } from '../slices/usersApiSlice.js';
+import { useUpdateUserMutation, useGetUserMutation } from '../slices/usersApiSlice.js';
 import Loader from '../components/Loader.jsx';
 import Cookies from 'universal-cookie';
 
 const ProfileScreen = () => {
 	const [firstName, setFirstName] = useState('');
 	const [lastName, setLastName] = useState('');
-	const [email, setEmail] = useState('');
-
-const cookie = new Cookies();
-
+	const [email, setEmail] = useState('')
+	const cookie = new Cookies();
 	const dispatch = useDispatch();
-
 	const { userInfo } = useSelector((state) => state.auth);
-
 	const [updateUser, { isLoading }] = useUpdateUserMutation();
+	const [getUser ] = useGetUserMutation();
 
 	useEffect(() => {
 		setFirstName(userInfo.name.firstName);
@@ -46,6 +43,19 @@ const cookie = new Cookies();
       }
 		}
 	};
+
+	const getHandler = async (e) => {
+		e.preventDefault();
+		try {
+			const res = await getUser().unwrap();
+			console.log(res);
+		} catch (err) {
+			toast.error(err?.data?.message || err.error);
+			console.log("get user button:", err);
+		}
+	}
+
+
 	return (
 		<FormContainer>
 			<h1>Update Profile</h1>
@@ -86,6 +96,9 @@ const cookie = new Cookies();
 
 				<Button type='submit' variant='primary' className='mt-3'>
 					Update
+				</Button>
+				<Button type="button" onClick={getHandler} varient="primary" className='mt-3'>
+					GET User
 				</Button>
 			</Form>
 		</FormContainer>
