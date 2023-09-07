@@ -26,7 +26,8 @@ Redux Toolkit
   - http: `git clone https://github.com/ghamelin/mern-todo.git`
   - ssh: `git clone git@github.com:ghamelin/mern-todo.git`
 # Installation
-2. `npm install`
+2. `npm install` in root directory
+  - `cd frontend` and `npm install` in frontend directory
 # Set up environment variables
 3. rename `.envexample` to `.env` and fill in the values
 # Start the app
