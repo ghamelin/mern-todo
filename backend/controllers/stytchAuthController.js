@@ -53,7 +53,6 @@ const getUserProfile = asyncHandler(async (req, res) => {
 	const params = {
     user_id: userId,
 }
-	console.log('params:', params)
 	try {
 		const user = await client.users.get(params)
 		console.log('user:', user)
@@ -61,6 +60,10 @@ const getUserProfile = asyncHandler(async (req, res) => {
 			res.json({
 				_id: user.user_id,
 				email: user.emails[0].email,
+				name: {
+					firstName: user.name.first_name,
+					lastName: user.name.last_name,
+				},
 			});
 		} else {
 			res.status(404);

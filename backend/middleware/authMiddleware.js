@@ -3,7 +3,9 @@ import client from "../config/stytch.js";
 
 
 const protect = AsyncHandler(async (req, res, next) => {
-  const sessionToken = JSON.parse(req.cookies.sessionToken)?.session_token;
+  const sessionToken = req.cookies.sessionToken
+
+
   client.sessions.authenticate({session_token: sessionToken}).then((response) => {
     req.user = response.user;
     next();
