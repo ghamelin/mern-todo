@@ -10,8 +10,8 @@ const register = asyncHandler(async (req, res) => {
 	const email = req.body.email;
 	const params = {
 		email: email,
-		login_magic_link_url: 'http://localhost:3000/auth',
-		signup_magic_link_url: 'http://localhost:3000/auth',
+		login_magic_link_url: process.env.MAGIC_LINK_URL,
+		signup_magic_link_url: process.env.MAGIC_LINK_URL,
 	};
 	const response = await client.magicLinks.email.loginOrCreate(params);
 	res.json(response);
@@ -83,9 +83,6 @@ const updateUserProfile = asyncHandler( async (req, res) => {
 			name: {
 				first_name: req.body.firstName,
 				last_name: req.body.lastName,
-			},
-			trusted_metadata: {
-				role: "ADMIN"
 			}
 		}
 		try {
