@@ -74,9 +74,9 @@ const getUserProfile = asyncHandler(async (req, res) => {
 });
 
 const updateUserProfile = asyncHandler( async (req, res) => {
-		const userId = req.user.user_id;
+		
 	const params = {
-			user_id: userId,
+			user_id: req.user.user_id,
 			name: {
 				first_name: req.body.firstName,
 				last_name: req.body.lastName,
@@ -86,8 +86,6 @@ const updateUserProfile = asyncHandler( async (req, res) => {
 			}
 		}
 		try {
-
-			console.log("payload", {userId, params})
 			const response = await client.users.update(params);
 			res.json(response);
 		} catch (error) {
