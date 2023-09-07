@@ -8,55 +8,80 @@ import { useUpdateUserMutation } from '../slices/usersApiSlice.js';
 import Loader from '../components/Loader.jsx';
 
 const ProfileScreen = () => {
-	const [name, setName] = useState('');
+	const [firstName, setFirstName] = useState('');
+	const [lastName, setLastName] = useState('');
 	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
-
 
 	const dispatch = useDispatch();
-
 	const { userInfo } = useSelector((state) => state.auth);
-
 	const [updateUser, { isLoading }] = useUpdateUserMutation();
 
 	useEffect(() => {
-		setName(userInfo.name);
+		if(!userInfo) return;
+		if(!userInfo.name) return;
+		setFirstName(userInfo.name.firstName);
+		setLastName(userInfo.name.lastName);
 		setEmail(userInfo.email);
-	}, [userInfo.setName, userInfo.setEmail]);
+		console.log('userInfo: ', userInfo);
+	}, [
+		userInfo.setFirstName,
+		userInfo.setEmail,
+		userInfo.setLastName,
+		userInfo.email,
+		userInfo,
+	]);
 
 	const submitHandler = async (e) => {
 		e.preventDefault();
-		if (password !== confirmPassword) {
-			toast.error('Passwords do not match');
-			return;
+		if (!firstName || !lastName || !email) {
+			toast.error('All fields are required');
 		} else {
 			try {
-        const res = await updateUser({ 
-          _id: userInfo._id,
-          name,
-          email,
-          password 
-        }).unwrap();
-        dispatch(setCredentials({...res}));
-        toast.success('User profile updated');
-      } catch (err) {
-        toast.error(err?.data?.message || err.error);
-      }
+				const res = await updateUser({
+					_id: userInfo._id,
+					firstName,
+					lastName,
+					email,
+				}).unwrap();
+				const user = {
+					_id: userInfo._id,
+					firstName: res.user.name.first_name,
+					lastName: res.user.name.last_name,
+					email: res.user.emails[0].email,
+				};
+				setEmail(user.email || '');
+				setFirstName(user.firstName || '');
+				setLastName(user.lastName || '');
+				dispatch(setCredentials(user));
+				toast.success('User profile updated');
+			} catch (err) {
+				toast.error(err?.data?.message || err.error);
+			}
 		}
 	};
+
 	return (
 		<FormContainer>
 			<h1>Update Profile</h1>
 			<Form onSubmit={submitHandler}>
 				<Form.Group className='my-2' controlId='Name'>
-					<Form.Label>Name</Form.Label>
+					<Form.Label>First Name</Form.Label>
 					<Form.Control
 						type='text'
-						placeholder='Enter Name'
-						value={name}
+						placeholder='Enter First Name'
+						value={firstName || ''}
 						onChange={(e) =>
-							setName(e.target.value)
+							setFirstName(e.target.value)
+						}></Form.Control>
+				</Form.Group>
+				<Form.Group className='my-2' controlId='Name'>
+					<Form.Label>Last Name</Form.Label>
+					<Form.Control
+						type='text'
+						placeholder='Enter Last Name'
+						value={lastName || ''}
+						onChange={(e) =>
+							setLastName(e.target.value)
 						}></Form.Control>
 				</Form.Group>
 
@@ -68,28 +93,6 @@ const ProfileScreen = () => {
 						value={email}
 						onChange={(e) =>
 							setEmail(e.target.value)
-						}></Form.Control>
-				</Form.Group>
-
-				<Form.Group className='my-2' controlId='password'>
-					<Form.Label>Password</Form.Label>
-					<Form.Control
-						type='password'
-						placeholder='Enter Password'
-						value={password}
-						onChange={(e) =>
-							setPassword(e.target.value)
-						}></Form.Control>
-				</Form.Group>
-
-				<Form.Group className='my-2' controlId='confirmPassword'>
-					<Form.Label>Confirm Password</Form.Label>
-					<Form.Control
-						type='password'
-						placeholder='Confirm Password'
-						value={confirmPassword}
-						onChange={(e) =>
-							setConfirmPassword(e.target.value)
 						}></Form.Control>
 				</Form.Group>
 

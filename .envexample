@@ -1,5 +1,11 @@
 NODE_ENV=development
-PORT=4000
-MONGODB_URI=some-mongodb-uri
-JWT_SECRET=some-jwt-secret
 
+# Server
+PORT=4000
+
+# Mongo
+MONGODB_URI= MONGODB_URI
+
+# Stytch
+STYTCH_PROJECT_ID= STYTCH_PROJECT_ID
+STYTCH_SECRET= STYTCH_SECRET

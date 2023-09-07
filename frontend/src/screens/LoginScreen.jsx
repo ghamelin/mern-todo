@@ -3,19 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import FormContainer from '../components/FormContainer.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLoginMutation } from '../slices/usersApiSlice.js';
+import { useRegisterMutation } from '../slices/usersApiSlice.js';
 import { setCredentials } from '../slices/authSlice.js';
 import { toast } from 'react-toastify';
 import Loader from '../components/Loader.jsx';
 
 const LoginScreen = () => {
 	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const [login, { isLoading }] = useLoginMutation();
+	const [login, { isLoading }] = useRegisterMutation();
 
 	const { userInfo } = useSelector((state) => state.auth);
 
@@ -28,9 +27,12 @@ const LoginScreen = () => {
 	const submitHandler = async (e) => {
 		e.preventDefault();
 		try {
-			const res = await login({ email, password }).unwrap();
-
-			dispatch(setCredentials({...res}));
+			if (!email) {
+				toast.error('Email is required');
+				return;
+			}
+			const res = await login({ email }).unwrap();
+			toast.success('Check your email for the login link');
 			navigate('/');
 		} catch (err) {
 			toast.error(err?.data?.message || err.error.message);
@@ -51,17 +53,6 @@ const LoginScreen = () => {
 							value={email}
 							onChange={(e) =>
 								setEmail(e.target.value)
-							}></Form.Control>
-					</Form.Group>
-
-					<Form.Group className='my-2' controlId='password'>
-						<Form.Label>Password</Form.Label>
-						<Form.Control
-							type='password'
-							placeholder='Enter Password'
-							value={password}
-							onChange={(e) =>
-								setPassword(e.target.value)
 							}></Form.Control>
 					</Form.Group>
 							{isLoading && <Loader /> }

@@ -17,7 +17,14 @@ npm-debug.log*
 *.sass.map
 *.scss.map
 
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-#Secrets
-.secrets
-
+# System Files
+.DS_Store
