@@ -1,12 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
-import * as stytch from 'stytch';
+import client from '../config/stytch.js';
 
-const client = new stytch.Client({
-	project_id: 'project-test-dce7a2ed-b991-4202-b97c-839e047e6c28',
-	secret: 'secret-test-5BrRaCvn9H7AE75dUj3pTlbd2K92fVJtpPA=',
-	env: stytch.envs.test,
-});
 
 // @desc Register or Login a user
 // @route POST /api/users
@@ -53,33 +48,54 @@ const logout = asyncHandler(async (req, res) => {
 // @route GET /api/users/profile
 // @access Private
 const getUserProfile = asyncHandler(async (req, res) => {
-	const user = await User.findById(req.user._id);
-	if (user) {
-		res.json({
-			_id: user._id,
-			email: user.email,
-		});
-	} else {
-		res.status(404);
-		throw new Error('User not found');
+
+	const userId = req.user.user_id;
+	const params = {
+    user_id: userId,
+}
+	console.log('params:', params)
+	try {
+		const user = await client.users.get(params)
+		console.log('user:', user)
+		if (user) {
+			res.json({
+				_id: user.user_id,
+				email: user.emails[0].email,
+			});
+		} else {
+			res.status(404);
+			throw new Error('User not found');
+		}
+	} catch (error) {
+		console.log(error);
+		throw new Error('User not found:', error);
 	}
+
 });
 
 const updateUserProfile = asyncHandler( async (req, res) => {
-	const userId = req.user._id;
+		const userId = req.user.user_id;
 	const params = {
-		name: {
-			first_name: req.body.firstName,
-			last_name: req.body.lastName,
+			user_id: userId,
+			name: {
+				first_name: req.body.firstName,
+				last_name: req.body.lastName,
+			},
+			trusted_metadata: {
+				role: "ADMIN"
+			}
 		}
-	}
 		try {
-			const response = await client.users.update(userId, params);
+
+			console.log("payload", {userId, params})
+			const response = await client.users.update(params);
 			res.json(response);
 		} catch (error) {
 			res.status(404);
-      throw new Error('unable to update user profile');
+			
+			console.error(error);
+			throw new Error('User not found');
 		}
 });
 
-export { register, auth, logout, getUserProfile, updateUserProfile };
+export { register, auth, logout, getUserProfile, updateUserProfile};
