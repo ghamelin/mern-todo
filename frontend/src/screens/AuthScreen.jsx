@@ -15,10 +15,10 @@ const AuthScreen = () => {
   useEffect(() => {
     axios.post('http://localhost:4000/api/users/auth', {token: searchParams.get('token')
     }).then((response) => {
+
       let sessionToken = response.data;
-      console.log(sessionToken);
-      let user = {_id: response.data.user.user_id, email: response.data.user.emails[0].email, name:{firstName: response.data.user.name.firstName, lastName: response.data.user.name.lastName}};
-      cookie.set("sessionToken", sessionToken, {path: '/', sameSite: 'strict'});
+      let user = {_id: response.data.user.user_id, email: response.data.user.emails[0].email, firstName: response.data.user.name.first_name, lastName: response.data.user.name.last_name};
+      cookie.set("sessionToken", sessionToken.session_token, {path: '/', sameSite: 'strict'});
       setCredentialsHandler(user);
       navigate('/profile');
     }).catch((error) => {`Error: ${error}`});

@@ -9,9 +9,9 @@ import { toast } from 'react-toastify';
 
 const Header = () => {
 	const { userInfo } = useSelector((state) => state.auth);
-
+	let name = null;
 	if (userInfo){
-		const name = `${userInfo.name.firstName} ${userInfo.name.lastName}` || null;
+		name = `${userInfo.firstName} ${userInfo.lastName}` || "";
 	}
 
 	const dispatch = useDispatch();
